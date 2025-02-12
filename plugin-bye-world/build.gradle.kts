@@ -18,14 +18,14 @@ tasks.test {
 }
 
 tasks.jar {
-    archiveFileName.set("hello-plugin.jar")
+    archiveFileName.set("bye-plugin.jar")
     destinationDirectory.set(file("../plugins"))
     manifest {
         attributes(
-            "Implementation-Title" to "Hello Plugin",
+            "Implementation-Title" to "Bye Plugin",
             "Implementation-Version" to version,
             "Implementation-Vendor" to "com.jkl",
-            "Main-Class" to "com.jkl.HelloWorldPlugin"
+            "Main-Class" to "com.jkl.ByeWorldPlugin"
         )
     }
 }
