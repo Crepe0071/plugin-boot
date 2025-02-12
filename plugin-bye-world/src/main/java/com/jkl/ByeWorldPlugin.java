@@ -11,7 +11,7 @@ public class ByeWorldPlugin implements Plugin {
 
 	@Override
 	public void run(BeforeContext context) {
-		context.setTest("bye bye 바이바이야");
+		context.setTest("bye");
 		System.out.println(context);
 	}
 }
