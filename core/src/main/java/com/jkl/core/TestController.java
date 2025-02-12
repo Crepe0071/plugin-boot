@@ -1,6 +1,9 @@
 package com.jkl.core;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +18,14 @@ public class TestController {
 
 	private static final String PLUGIN_DIR = "plugins";
 
+	private List<String> availablePlugins = new ArrayList<>(){{add("hello-plugin.jar");}};
+
 	public TestController(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 	}
 
 	@GetMapping
-	public ResponseEntity test() throws Exception {
+	public ResponseEntity<String> test() throws Exception {
 
 		File pluginDir = new File(PLUGIN_DIR);
 		if (!pluginDir.exists() || !pluginDir.isDirectory()) {
@@ -35,14 +40,32 @@ public class TestController {
 
 		BeforeContext v = new BeforeContext();
 		for (File pluginJar : jarFiles) {
-			// 플러그인 로드 및 실행
-			PluginManager pluginManager = new PluginManager();
-			Plugin plugin = pluginManager.loadPlugin(pluginJar);
-			System.out.println("플러그인 실행 결과:");
+			if (availablePlugins.contains(pluginJar.getName())) {
+				// 플러그인 로드 및 실행
+				PluginManager pluginManager = new PluginManager();
+				Plugin plugin = pluginManager.loadPlugin(pluginJar);
+				System.out.println("플러그인 실행 결과:");
 
-			plugin.run(v);
+				plugin.run(v);
+			}
 		}
 
 		return ResponseEntity.ok(v.getTest());
+	}
+
+	@GetMapping("/v2")
+	public ResponseEntity<Void> testV2() {
+
+		availablePlugins.add("bye-plugin.jar");
+
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/v3")
+	public ResponseEntity<Void> testV3() {
+
+		availablePlugins.remove("hello-plugin.jar");
+
+		return ResponseEntity.ok().build();
 	}
 }
