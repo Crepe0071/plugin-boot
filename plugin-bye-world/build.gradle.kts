@@ -13,8 +13,13 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
+    workingDir = rootProject.projectDir
+}
+
+tasks.withType<JavaExec> {
+    workingDir = rootProject.projectDir
 }
 
 tasks.jar {
@@ -24,8 +29,8 @@ tasks.jar {
         attributes(
             "Implementation-Title" to "Bye Plugin",
             "Implementation-Version" to version,
-            "Implementation-Vendor" to "com.jkl",
-            "Main-Class" to "com.jkl.ByeWorldPlugin"
+            "Implementation-Vendor" to project.group,
+            "Main-Class" to "${project.group}.ByeWorldPlugin"
         )
     }
 }

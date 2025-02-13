@@ -11,7 +11,7 @@ public class HelloWorldPlugin implements Plugin {
 
 	@Override
 	public void run(BeforeContext context) {
-		context.setTest("fghfdfhjkj342");
+		context.setTest("안농!");
 		System.out.println(context);
 	}
 }

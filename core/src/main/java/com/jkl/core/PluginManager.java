@@ -16,6 +16,8 @@ import java.util.jar.Manifest;
 
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * 플러그인 jar 파일을 로드하여 Plugin 인터페이스 구현체를 생성하는 간단한 플러그인 매니저.
  */
@@ -25,6 +27,11 @@ public class PluginManager {
 	private static final String PLUGIN_DIR = "plugins";
 	private static final Map<String, Plugin> PLUGIN_MAP = new HashMap<>();
 
+	@PostConstruct
+	public void init() throws Exception {
+		loadPlugins();
+	}
+
 	/**
 	 * 지정된 플러그인 jar 파일에서 플러그인을 로드.
 	 *
@@ -33,6 +40,7 @@ public class PluginManager {
 	public void loadPlugins() throws Exception {
 
 		File pluginDir = new File(PLUGIN_DIR);
+
 		if (!pluginDir.exists() || !pluginDir.isDirectory()) {
 			throw new RuntimeException("❌ 플러그인 디렉토리를 찾을 수 없습니다: " + pluginDir.getAbsolutePath());
 		}
@@ -72,8 +80,7 @@ public class PluginManager {
 		URL[] urls = {tempJar.toUri().toURL()};
 
 		// ✅ JAR의 `META-INF/MANIFEST.MF` 파일 읽기
-		try (URLClassLoader pluginClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
-			 JarFile jarFile = new JarFile(pluginJar)) {
+		try (URLClassLoader pluginClassLoader = new URLClassLoader(urls, this.getClass().getClassLoader()); JarFile jarFile = new JarFile(pluginJar)) {
 			Manifest manifest = jarFile.getManifest();
 			Attributes attributes = manifest.getMainAttributes();
 			String pluginClassName = attributes.getValue("Main-Class");
